@@ -85,7 +85,8 @@ async function main() {
                 room.send({
                     type: 'client_chat_message',
                     message: message,
-                    userId: currentUser.id
+                    userId: currentUser.id,
+                    username: currentUser.username // Add username directly to the payload
                 });
                 chatInputEl.value = '';
             }

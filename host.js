@@ -16,9 +16,16 @@ export function handleHostMessage(event, room) {
     switch (type) {
         case 'client_chat_message':
             if (data.message && data.userId) {
-                // Prioritize getting username from room.peers as it's the most "live" source.
-                const senderPeer = room.peers[clientId];
-                const senderUsername = senderPeer ? senderPeer.username : 'Unknown';
+                let senderUsername = 'Unknown';
+
+                // Priority 1: Use username from the message payload itself.
+                if (data.username) {
+                    senderUsername = data.username;
+                } 
+                // Priority 2 (Fallback): Use the live peers object.
+                else if (room.peers[clientId] && room.peers[clientId].username) {
+                    senderUsername = room.peers[clientId].username;
+                }
 
                 // Host validates the message and relays it in a structured object
                 room.send({
